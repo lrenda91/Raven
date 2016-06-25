@@ -11,6 +11,15 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res']
+            jniLibs.srcDirs = ['src/main/libs']
+            //jni.srcDirs = ['src/main/jni'] // This prevents the auto generation of Android.mk
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

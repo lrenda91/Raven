@@ -10,50 +10,37 @@ import android.view.Surface;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import it.polito.mec.video.raven.VideoChunks;
+
 /**
  * Created by luigi on 21/01/16.
  */
 @SuppressWarnings("deprecation")
 public class DecoderThread extends Thread implements Runnable {
 
-    public static abstract class Listener {
-        void onEncodedDataAvailable(byte[] data){}
-    }
-
     private static final String TAG = "DECODER";
     private static final boolean VERBOSE = false;
 
     private static final int TIMEOUT_US = 10000;
     private static final String MIME_TYPE = "video/avc";
-    private static final int FRAME_RATE = 20;
-    private static final int I_FRAME_INTERVAL = 1;
-    private static final int BIT_RATE_BPS = 500000;
-    private static final long NUM_FRAMES = 100;
 
-    private Listener mListener;
-    //private Semaphore mConfigDataReceived = new Semaphore(0);
     private ByteBuffer mConfigBuffer;
     private VideoChunks mEncodedFrames = new VideoChunks();
     private final int mWidth, mHeight;
 
     private Surface mOutputSurface;
 
-    public DecoderThread(int w, int h, Listener listener){
+    public DecoderThread(int w, int h){
         mWidth = w;
         mHeight = h;
-        mListener = listener;
     }
 
     public void drain(){
         mEncodedFrames.clear();
     }
 
-    public void setListener(Listener mListener) {
-        this.mListener = mListener;
-    }
-
-    public synchronized void setConfigurationBuffer(ByteBuffer csd0){
-        mConfigBuffer = csd0;
+    public synchronized void setConfigurationBuffer(byte[] csd0){
+        mConfigBuffer = ByteBuffer.wrap(csd0);
         notifyAll();
     }
 
@@ -64,8 +51,6 @@ public class DecoderThread extends Thread implements Runnable {
     public void setSurface(Surface s){
         mOutputSurface = s;
     }
-
-    private int[] nums;
 
     @Override
     public void run() {
@@ -101,6 +86,16 @@ public class DecoderThread extends Thread implements Runnable {
             mConfigBuffer.position(0);
             mConfigBuffer.get(spsArray, 0, spsSize);
             mConfigBuffer.get(ppsArray, 0, ppsSize);
+            /*String s="sps:[ ";
+            for (int i=0;i<spsSize;i++){
+                s+=spsArray[i]+" ";
+            }
+            s+="]"; Log.d(TAG, s);
+            s="pps:[ ";
+            for (int i=0;i<ppsSize;i++){
+                s+=ppsArray[i]+" ";
+            }
+            s+="]"; Log.d(TAG, s);*/
             ByteBuffer sps = ByteBuffer.wrap(spsArray);
             ByteBuffer pps = ByteBuffer.wrap(ppsArray);
             //format.setByteBuffer("csd-0", mConfigBuffer);  //SPS + PPS

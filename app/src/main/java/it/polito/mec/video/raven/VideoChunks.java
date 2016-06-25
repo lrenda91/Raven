@@ -1,6 +1,5 @@
-package it.polito.mec.video.raven.receiver;
+package it.polito.mec.video.raven;
 
-import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
 /**
@@ -23,14 +22,21 @@ public class VideoChunks {
         }
     }
 
+    private final int mMaxSize = 100;
     private LinkedList<Chunk> mChunks = new LinkedList<>();
 
     public synchronized void addChunk(byte[] data, int flags, long time) {
+        if (mChunks.size() == mMaxSize){
+            mChunks.removeFirst();
+        }
         mChunks.addLast(new Chunk(data, flags, time));
         notifyAll();
     }
 
     public synchronized void addChunk(Chunk chunk) {
+        if (mChunks.size() == mMaxSize){
+            mChunks.removeFirst();
+        }
         mChunks.addLast(chunk);
         notifyAll();
     }

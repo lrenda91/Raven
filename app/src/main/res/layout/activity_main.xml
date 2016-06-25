@@ -17,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:textSize="24dp"
+            android:textSize="@dimen/title_size"
             android:text="RAVEN"
             android:textStyle="bold"
             android:gravity="center"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:textSize="16dp"
+            android:textSize="@dimen/subtitle_size"
             android:text="Radio aware video optimization in a fully virtualized network"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -37,14 +37,12 @@
             android:layout_height="100dp" />
 
         <TextView
-            android:textSize="16dp"
             android:text="PoC for Mobile Edge Computing"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:textSize="16dp"
             android:text="with partners"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -54,7 +52,7 @@
             android:weightSum="4"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="@dimen/logos_height">
             <ImageView
                 android:padding="4dp"
                 android:src="@drawable/tim"

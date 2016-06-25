@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sender.ui.PreviewFragment">
+
+    <LinearLayout
+        android:id="@+id/main_controls"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_rec"
+            android:drawableTop="@drawable/ic_record"
+            android:text="rec"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/button_pause"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:drawableTop="@drawable/ic_pause"
+            android:text="pause"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/button_stop"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:drawableTop="@drawable/ic_stop"
+            android:text="stop"
+            android:layout_height="match_parent"/>
+
+        <!--<Button
+            android:id="@+id/button_quality_switch"
+            android:layout_width="0dp"
+            android:drawableTop="@drawable/ic_scale"
+            android:text="scale"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>-->
+        <Button
+            android:id="@+id/button_connect"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="CONNECT"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+    <!--<Button
+        android:id="@+id/button_connect"
+        android:layout_width="match_parent"
+        android:text="CONNECT"
+        android:layout_height="wrap_content"/>-->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/sliders"
+        android:layout_width="match_parent"
+        android:layout_below="@id/main_controls"
+        android:layout_height="wrap_content">
+
+        <!--<LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="4"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/resolution_text_view"
+                android:gravity="center"
+                android:text="size"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <SeekBar
+                android:id="@+id/resolution_seek_bar"
+                android:progress="1"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>-->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="4"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/presets_text_view"
+                android:gravity="center"
+                android:lines="2"
+                android:maxLines="2"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <SeekBar
+                android:id="@+id/presets_seek_bar"
+                android:progress="1"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <SurfaceView
+        android:id="@+id/preview"
+        android:layout_below="@id/sliders"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

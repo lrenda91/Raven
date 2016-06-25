@@ -1,12 +1,12 @@
-package it.polito.mec.video.raven.receiver.websocket;
+package it.polito.mec.video.raven.receiver.net;
 
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 
 import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketFactory;
 
 import org.json.JSONException;
@@ -16,10 +16,10 @@ import org.json.JSONObject;
  * Manages a {@link WebSocket} inside a background thread
  * Created by luigi on 02/12/15.
  */
-public class WSClientImpl extends AbstractWSClient {
+public class WSClientImpl extends WebSocketAdapter implements WSClient {
 
     private static final boolean VERBOSE = true;
-    private static final String TAG = "WebSocketClient";
+    private static final String TAG = "WSClient";
 
     private Handler mMainHandler;
 
@@ -30,11 +30,17 @@ public class WSClientImpl extends AbstractWSClient {
         void onStreamChunkReceived(byte[] chunk, int flags, long timestamp);
     }
 
+    private WebSocket mWebSocket;
     private Listener mListener;
 
     public WSClientImpl(Listener listener){
         mMainHandler = new Handler(Looper.getMainLooper());
         mListener = listener;
+    }
+
+    @Override
+    public WebSocket getSocket() {
+        return mWebSocket;
     }
 
     @Override
@@ -63,7 +69,8 @@ public class WSClientImpl extends AbstractWSClient {
                         if (mListener != null) mListener.onConnectionEstablished();
                     }
                 });
-
+                sendHello();
+                requestConfigParams();
             }
         }).start();
     }
@@ -103,11 +110,7 @@ public class WSClientImpl extends AbstractWSClient {
                     String sParams = obj.getString("configArray");
                     int width = obj.getInt("width");
                     int height = obj.getInt("height");
-                    byte[] params = null;
-                    try{
-                        params = sParams.getBytes("UTF-8");
-                    }catch(Exception e){}
-                    //final byte[] params = Base64.decode(sParams, Base64.DEFAULT);
+                    final byte[] params = Base64.decode(sParams, Base64.DEFAULT);
                     if (mListener != null) mListener.onConfigParamsReceived(params, width, height);
                 }
                 else if (type.equals("stream")){

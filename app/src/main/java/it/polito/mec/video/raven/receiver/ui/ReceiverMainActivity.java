@@ -1,4 +1,4 @@
-package it.polito.mec.video.raven.receiver;
+package it.polito.mec.video.raven.receiver.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.nio.ByteBuffer;
-
 import it.polito.mec.video.raven.R;
-import it.polito.mec.video.raven.receiver.websocket.WSClientImpl;
+import it.polito.mec.video.raven.VideoChunks;
+import it.polito.mec.video.raven.receiver.DecoderThread;
+import it.polito.mec.video.raven.receiver.net.WSClientImpl;
 
 
 public class ReceiverMainActivity extends AppCompatActivity {
@@ -30,8 +30,6 @@ public class ReceiverMainActivity extends AppCompatActivity {
         @Override
         public void onConnectionEstablished() {
             Toast.makeText(ReceiverMainActivity.this, "Connected", Toast.LENGTH_LONG).show();
-            mClient.sendHello();
-            mClient.requestConfigParams();
         }
 
         @Override
@@ -43,24 +41,20 @@ public class ReceiverMainActivity extends AppCompatActivity {
 
         @Override
         public void onConfigParamsReceived(byte[] configParams, int width, int height) {
-            Log.d("ACT", "config bytes: "+new String(configParams)+" ; " +
+            Log.d("ACT", "config bytes["+configParams.length+"] ; " +
                     "resolution: "+width+"x"+height);
-            mWidth = width;
-            mHeight = height;
             stopDecoder();
-            startDecoder();
-            mDecoderTask.setConfigurationBuffer(ByteBuffer.wrap(configParams));
+            startDecoder(width, height);
+            mDecoderTask.setConfigurationBuffer(configParams);
         }
 
         @Override
         public void onStreamChunkReceived(byte[] chunk, int flags, long timestamp) {
-            //Log.d("ACT", "stream["+chunk.length+"]");
             VideoChunks.Chunk c = new VideoChunks.Chunk(chunk, flags, timestamp);
             mDecoderTask.submitEncodedData(c);
         }
     });
 
-    private int mWidth = 320, mHeight = 240;
     private Surface mSurface;
     private DecoderThread mDecoderTask;
 
@@ -145,9 +139,9 @@ public class ReceiverMainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private void startDecoder(){
+    private void startDecoder(int width, int height){
         if (mDecoderTask == null){
-            mDecoderTask = new DecoderThread(mWidth, mHeight, null);
+            mDecoderTask = new DecoderThread(width, height);
             mDecoderTask.setSurface(mSurface);
             mDecoderTask.start();
         }

@@ -5,7 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import it.polito.mec.video.raven.receiver.ReceiverMainActivity;
+import it.polito.mec.video.raven.receiver.ui.ReceiverMainActivity;
+import it.polito.mec.video.raven.sender.ui.SenderMainActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +19,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ReceiverMainActivity.class));
+            }
+        });
+
+        findViewById(R.id.sender_choice).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SenderMainActivity.class));
             }
         });
     }

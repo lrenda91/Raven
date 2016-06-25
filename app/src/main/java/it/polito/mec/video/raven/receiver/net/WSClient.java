@@ -1,14 +1,11 @@
-package it.polito.mec.video.raven.receiver.websocket;
+package it.polito.mec.video.raven.receiver.net;
 
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketException;
-
-import java.net.InetAddress;
 
 /**
  * Created by luigi on 02/12/15.
  */
-public interface WebSocketClient {
+public interface WSClient {
 
     WebSocket getSocket();
 

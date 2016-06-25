@@ -1,4 +1,4 @@
-package it.polito.mec.video.raven.receiver;
+package it.polito.mec.video.raven.sender.ui;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

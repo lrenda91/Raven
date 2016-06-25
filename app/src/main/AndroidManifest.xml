@@ -3,10 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.polito.mec.video.raven">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,11 +25,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".receiver.ReceiverMainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+            android:name=".sender.ui.SenderMainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name=".receiver.SettingsActivity"
+            android:name=".receiver.ui.ReceiverMainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".sender.ui.SettingsActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".receiver.ui.SettingsActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             android:label="@string/title_activity_settings"></activity>
     </application>
