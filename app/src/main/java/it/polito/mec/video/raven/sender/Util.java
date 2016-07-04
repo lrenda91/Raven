@@ -23,71 +23,6 @@ import it.polito.mec.video.raven.sender.record.Size;
  */
 public class Util {
 
-    /*
-    public static boolean a(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        int type = info.getType(), subType = info.getSubtype();
-        Log.d("NET", String.format("type: %s subtype: %s", info.getTypeName(), info.getSubtypeName()));
-        if (type == ConnectivityManager.TYPE_WIFI) {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            if (wifiInfo != null) {
-                Integer linkSpeed = wifiInfo.getLinkSpeed(); //measured using WifiInfo.LINK_SPEED_UNITS
-                Log.d("NET", "speed: "+linkSpeed);
-            }
-            return true;
-        } else if (type == ConnectivityManager.TYPE_MOBILE) {
-            switch (subType) {
-                case TelephonyManager.NETWORK_TYPE_1xRTT:
-                    return false; // ~ 50-100 kbps
-                case TelephonyManager.NETWORK_TYPE_CDMA:
-                    return false; // ~ 14-64 kbps
-                case TelephonyManager.NETWORK_TYPE_EDGE:
-                    return false; // ~ 50-100 kbps
-                case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                    return true; // ~ 400-1000 kbps
-                case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                    return true; // ~ 600-1400 kbps
-                case TelephonyManager.NETWORK_TYPE_GPRS:
-                    return false; // ~ 100 kbps
-                case TelephonyManager.NETWORK_TYPE_HSDPA:
-                    return true; // ~ 2-14 Mbps
-                case TelephonyManager.NETWORK_TYPE_HSPA:
-                    return true; // ~ 700-1700 kbps
-                case TelephonyManager.NETWORK_TYPE_HSUPA:
-                    return true; // ~ 1-23 Mbps
-                case TelephonyManager.NETWORK_TYPE_UMTS:
-                    return true; // ~ 400-7000 kbps
-                case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
-                    return true; // ~ 1-2 Mbps
-                case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
-                    return true; // ~ 5 Mbps
-                case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
-                    return true; // ~ 10-20 Mbps
-                case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
-                    return false; // ~25 kbps
-                case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
-                    return true; // ~ 10+ Mbps
-                // Unknown
-                case TelephonyManager.NETWORK_TYPE_UNKNOWN:
-                default:
-                    return false;
-            }
-        } else {
-            return false;
-        }
-    }
-*/
-
-
-
-
-
-
-
-
-
     /**
      * Performs in place Cb and Cr swapping for a YUV 4:2:0 Planar frame <br>
      * The frame could be formatted as :
@@ -145,7 +80,6 @@ public class Util {
     public static byte[] swapColors(byte[] data, int w, int h, int pictureFormat){
         switch(pictureFormat){
             case ImageFormat.YV12:
-                //return swapYUV420SemiPlanar(data,w, h);
                 return swapYUV420Planar(data);
             case ImageFormat.NV21:
                 return swapYUV420SemiPlanar(data,w,h);

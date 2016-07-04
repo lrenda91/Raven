@@ -6,5 +6,6 @@
     <dimen name="title_size">32sp</dimen>
     <dimen name="subtitle_size">24sp</dimen>
     <dimen name="logos_height">100dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

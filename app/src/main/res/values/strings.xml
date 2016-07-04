@@ -2,7 +2,7 @@
     <string name="app_name">Raven</string>
 
 
-	<string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_key_server_ip">address</string>
@@ -20,5 +20,14 @@
     <string name="pref_key_adaptivity">adaptivity</string>
     <string name="pref_title_adaptivity">Adapt video quality</string>
     <string name="pref_title_adaptivity_summary">Automatically switch to best possible quality</string>
+
+
+    <string name="title_activity_servers">Servers List</string>
+    <string name="choose_server">Select server</string>
+    <string name="sender_app_label">Video recorder</string>
+    <string name="receiver_app_label">Video playback</string>
+
+    <string name="pref_key_saved_servers">servers</string>
+    <string name="pref_saved_servers_default_value">[]</string>
 
 </resources>

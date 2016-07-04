@@ -29,7 +29,7 @@ public class Camera1ManagerImpl implements Camera1Manager {
     }
 
     private static final String TAG = "CameraManager";
-    private static final boolean VERBOSE = false;
+    private static final boolean VERBOSE = true;
 
     private static final int sRatioWidth = 4;
     private static final int sRatioHeight = 3;
@@ -45,6 +45,7 @@ public class Camera1ManagerImpl implements Camera1Manager {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             if (data == null || data.length != mCurrentBuffersSize){
+                Log.e(TAG, "Inconsistent camera buffer");
                 return;
             }
             useNextCallbackBuffer();
@@ -195,6 +196,10 @@ public class Camera1ManagerImpl implements Camera1Manager {
         if (idx < 0){
             throw new IllegalArgumentException("Illegal size: "+newSize);
         }
+        /*if (newSize.equals(getCurrentSize())) {
+            if (VERBOSE) Log.d(TAG, "No changes in camera size: "+newSize);
+            return;
+        }*/
         mSuitableSizesIndex = idx;
         int width = newSize.getWidth();
         int height = newSize.getHeight();
@@ -212,10 +217,7 @@ public class Camera1ManagerImpl implements Camera1Manager {
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                Log.d(TAG, "created");
                 try {
                     checkForCameraAcquisition(true);
                     /*mCamera.stopPreview();
@@ -232,7 +234,7 @@ public class Camera1ManagerImpl implements Camera1Manager {
                     }*/
                     mCamera.setPreviewDisplay(holder);
                     //mCamera.setDisplayOrientation(90);
-                    mCamera.startPreview();
+                    //mCamera.startPreview();
 
                 } catch (IOException e) {
                     Log.e(TAG, e.getClass().getName() + ": " + e.getMessage());
@@ -240,7 +242,13 @@ public class Camera1ManagerImpl implements Camera1Manager {
             }
 
             @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                Log.d(TAG, "changed");
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) { Log.d(TAG, "destroyed");
             }
         });
     }
@@ -325,6 +333,7 @@ public class Camera1ManagerImpl implements Camera1Manager {
     private void checkForCameraAcquisition(boolean cameraRequired){
         boolean cameraAcquiredNow = (mCamera != null);
         if (cameraAcquiredNow ^ cameraRequired){
+            if (VERBOSE) Log.d(TAG, "Camera acquired: "+cameraAcquiredNow+"; required: "+cameraRequired);
             throw new IllegalStateException("State");
         }
     }

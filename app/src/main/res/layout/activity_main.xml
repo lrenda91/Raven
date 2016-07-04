@@ -90,7 +90,7 @@
             <Button
                 android:id="@+id/sender_choice"
                 android:drawableTop="@drawable/sender"
-                android:text="Video producer"
+                android:text="@string/sender_app_label"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
@@ -98,11 +98,18 @@
             <Button
                 android:id="@+id/receiver_choice"
                 android:drawableTop="@drawable/receiver"
-                android:text="Video player"
+                android:text="@string/receiver_app_label"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_gravity="center"
+            android:text="@string/choose_server"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

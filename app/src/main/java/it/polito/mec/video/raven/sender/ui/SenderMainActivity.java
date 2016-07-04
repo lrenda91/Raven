@@ -27,8 +27,8 @@ public class SenderMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         registerExceptionHandler();
         setContentView(R.layout.activity_sender);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mAdapter.addFrag(new PreviewFragment(),"tab1");
@@ -52,6 +52,7 @@ public class SenderMainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -69,9 +70,7 @@ public class SenderMainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-
+*/
 
     public static void registerExceptionHandler(){
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());

@@ -16,6 +16,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import it.polito.mec.video.raven.R;
@@ -26,25 +28,47 @@ import it.polito.mec.video.raven.receiver.net.WSClientImpl;
 
 public class ReceiverMainActivity extends AppCompatActivity {
 
+    private Button mConnectionButton;
+    private TextView mEncodingDetails;
+
+    private Surface mSurface;
+    private DecoderThread mDecoderTask;
+
+    private PowerManager.WakeLock wakeLock;
+    private SharedPreferences mPreferences;
+
     private WSClientImpl mClient = new WSClientImpl(new WSClientImpl.Listener() {
         @Override
-        public void onConnectionEstablished() {
-            Toast.makeText(ReceiverMainActivity.this, "Connected", Toast.LENGTH_LONG).show();
+        public void onConnectionLost(boolean closedByServer) {
+            setupConnectionButton(true);
         }
 
         @Override
-        public void onServerUnreachable(Exception e) {
+        public void onConnectionEstablished() {
+            Toast.makeText(ReceiverMainActivity.this, "Connected", Toast.LENGTH_LONG).show();
+            setupConnectionButton(false);
+        }
+
+        @Override
+        public void onConnectionFailed(Exception e) {
             Toast.makeText(ReceiverMainActivity.this, "Can't connect to server: "
                     + e.getClass().getSimpleName()+": "+e.getMessage(), Toast.LENGTH_LONG).show();
 
         }
 
         @Override
-        public void onConfigParamsReceived(byte[] configParams, int width, int height) {
+        public void onConfigParamsReceived(byte[] configParams, final int width, final int height, final int bitrate) {
             Log.d("ACT", "config bytes["+configParams.length+"] ; " +
-                    "resolution: "+width+"x"+height);
+                    "resolution: "+width+"x"+height+" "+bitrate+" Kbps");
             stopDecoder();
             startDecoder(width, height);
+            mEncodingDetails.post(new Runnable() {
+                @Override
+                public void run() {
+                    mEncodingDetails.setText(String.format("(%dx%d) %d Kbps", width, height, bitrate));
+                }
+            });
+
             mDecoderTask.setConfigurationBuffer(configParams);
         }
 
@@ -55,19 +79,15 @@ public class ReceiverMainActivity extends AppCompatActivity {
         }
     });
 
-    private Surface mSurface;
-    private DecoderThread mDecoderTask;
-
-    private PowerManager.WakeLock wakeLock;
-    private SharedPreferences mPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiver);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mConnectionButton = (Button) findViewById(R.id.connect_button);
+        mEncodingDetails = (TextView) findViewById(R.id.encoding_details_tv);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         final SurfaceView outputView = (SurfaceView) findViewById(R.id.output_view);
         outputView.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -87,21 +107,11 @@ public class ReceiverMainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.connect_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ip = mPreferences.getString(getString(R.string.pref_key_server_ip),
-                        getString(R.string.pref_server_ip_default_value));
-                int port = Integer.parseInt(mPreferences.getString(getString(R.string.pref_key_server_port),
-                        getString(R.string.pref_server_port_default_value)));
-                mClient.connect(ip, port, 2000);
-            }
-        });
+        setupConnectionButton(true);
 
         outputView.post(new Runnable() {
             @Override
             public void run() {
-                //int w = surfaceView.getMeasuredWidth();
                 int measuredHeight = outputView.getMeasuredHeight();
                 ViewGroup.LayoutParams lp = outputView.getLayoutParams();
                 lp.width = measuredHeight * 4 / 3;
@@ -112,6 +122,34 @@ public class ReceiverMainActivity extends AppCompatActivity {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
+    private void setupConnectionButton(boolean connect){
+        String text = connect ? "Connect" : "Disconnect";
+        View.OnClickListener listener;
+        if (connect){
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String ip = mPreferences.getString(getString(R.string.pref_key_server_ip),
+                            getString(R.string.pref_server_ip_default_value));
+                    int port = Integer.parseInt(mPreferences.getString(getString(R.string.pref_key_server_port),
+                            getString(R.string.pref_server_port_default_value)));
+                    mClient.connect(ip, port, 2000);
+                }
+            };
+        }
+        else{
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClient.closeConnection();
+                }
+            };
+        }
+        mConnectionButton.setText(text);
+        mConnectionButton.setOnClickListener(listener);
+    }
+
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -128,6 +166,7 @@ public class ReceiverMainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @Override
     protected void onPause() {

@@ -86,19 +86,9 @@ public class DecoderThread extends Thread implements Runnable {
             mConfigBuffer.position(0);
             mConfigBuffer.get(spsArray, 0, spsSize);
             mConfigBuffer.get(ppsArray, 0, ppsSize);
-            /*String s="sps:[ ";
-            for (int i=0;i<spsSize;i++){
-                s+=spsArray[i]+" ";
-            }
-            s+="]"; Log.d(TAG, s);
-            s="pps:[ ";
-            for (int i=0;i<ppsSize;i++){
-                s+=ppsArray[i]+" ";
-            }
-            s+="]"; Log.d(TAG, s);*/
             ByteBuffer sps = ByteBuffer.wrap(spsArray);
             ByteBuffer pps = ByteBuffer.wrap(ppsArray);
-            //format.setByteBuffer("csd-0", mConfigBuffer);  //SPS + PPS
+
             format.setByteBuffer("csd-0", sps);
             format.setByteBuffer("csd-1", pps);
             byte[] b = new byte[mConfigBuffer.remaining()];

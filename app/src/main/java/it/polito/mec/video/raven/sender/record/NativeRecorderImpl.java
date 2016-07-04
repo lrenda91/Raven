@@ -147,7 +147,7 @@ public class NativeRecorderImpl extends AbsCamcorder implements Camera1ManagerIm
         synchronized (mBackgroundThread){
             try{
                 while (mBackgroundHandler == null){
-                    wait();
+                    mBackgroundThread.wait();
                 }
             }catch(InterruptedException e){}
         }
@@ -196,7 +196,7 @@ public class NativeRecorderImpl extends AbsCamcorder implements Camera1ManagerIm
                             if (VERBOSE) Log.d(TAG, "nativeInit");
                         }
                     });
-                    notifyAll();
+                    mBackgroundThread.notifyAll();
                 }
 
             }

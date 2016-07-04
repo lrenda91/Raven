@@ -7,7 +7,9 @@ import android.util.Log;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketFrame;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,9 +26,10 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient {
     private Handler mMainHandler;
 
     public interface Listener {
+        void onConnectionLost(boolean closedByServer);
         void onConnectionEstablished();
-        void onServerUnreachable(Exception e);
-        void onConfigParamsReceived(byte[] configParams, int w, int h);
+        void onConnectionFailed(Exception e);
+        void onConfigParamsReceived(byte[] configParams, int w, int h, int bitrate);
         void onStreamChunkReceived(byte[] chunk, int flags, long timestamp);
     }
 
@@ -58,7 +61,7 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient {
                     mMainHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (mListener != null) mListener.onServerUnreachable(e);
+                            if (mListener != null) mListener.onConnectionFailed(e);
                         }
                     });
                     return;
@@ -110,8 +113,9 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient {
                     String sParams = obj.getString("configArray");
                     int width = obj.getInt("width");
                     int height = obj.getInt("height");
+                    int Kbps = obj.getInt("encodeBps");
                     final byte[] params = Base64.decode(sParams, Base64.DEFAULT);
-                    if (mListener != null) mListener.onConfigParamsReceived(params, width, height);
+                    if (mListener != null) mListener.onConfigParamsReceived(params, width, height, Kbps);
                 }
                 else if (type.equals("stream")){
                     String sChunk = obj.getString("data");
@@ -127,4 +131,26 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient {
         }
 
     }
+
+    @Override
+    public void onConnectError(WebSocket websocket, final WebSocketException exception) throws Exception {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mListener != null) mListener.onConnectionFailed(exception);
+            }
+        });
+    }
+
+    @Override
+    public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, final boolean closedByServer) throws Exception {
+        if (VERBOSE) Log.d("WS", "disconnected by server: " + closedByServer);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mListener != null) mListener.onConnectionLost(closedByServer);
+            }
+        });
+    }
+
 }

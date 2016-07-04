@@ -176,17 +176,12 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient, Encoding
         }
     }
 
-    private long cont = 1L;
-
     public void sendStreamBytes(final VideoChunks.Chunk chunk){
         try {
             JSONObject obj = JSONMessageFactory.createStreamMessage(chunk);
-            //obj.put("num",(cont++));
-            //Log.d(TAG, "seq# -> "+cont);
             String text = obj.toString();
             totalBytesToSend.addAndGet(text.length());
             contToSend.incrementAndGet();
-            //try{Thread.sleep(10);}catch (InterruptedException e){}
             mWebSocket.sendText(text);
         }
         catch(JSONException e){
@@ -257,7 +252,6 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient, Encoding
     public void onFrameSent(WebSocket websocket, final WebSocketFrame frame) throws Exception {
         super.onFrameSent(websocket, frame);
         if (frame.isDataFrame()) {
-            //try{Thread.sleep(10);}catch (InterruptedException e){}
             if (contSent.get() == 0){
                 mMeasureThread.start();
             }

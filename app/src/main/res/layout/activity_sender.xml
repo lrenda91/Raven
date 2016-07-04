@@ -8,7 +8,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".sender.ui.SenderMainActivity">
-    <android.support.design.widget.AppBarLayout
+
+  <!--  <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -19,6 +20,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
+    -->
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
