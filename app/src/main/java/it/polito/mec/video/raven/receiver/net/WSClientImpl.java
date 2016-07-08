@@ -14,6 +14,10 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+
 /**
  * Manages a {@link WebSocket} inside a background thread
  * Created by luigi on 02/12/15.
@@ -130,6 +134,20 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient {
             Log.e(TAG, "Can't parse JSON from text: "+text);
         }
 
+    }
+
+    private static final int STREAM_HEADER_SIZE = (Integer.SIZE + Long.SIZE) / Byte.SIZE;
+
+    @Override
+    public void onBinaryFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        byte[] payload = frame.getPayload();
+        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload));
+        int flag = dis.readInt();
+        long ts = dis.readLong();
+        int remaining = payload.length - STREAM_HEADER_SIZE;
+        byte[] data = new byte[remaining];
+        dis.read(data);
+        if (mListener != null) mListener.onStreamChunkReceived(data, flag, ts);
     }
 
     @Override

@@ -9,6 +9,9 @@ import com.neovisionaries.ws.client.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -176,8 +179,11 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient, Encoding
         }
     }
 
+    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    private static final int STREAM_HEADER_SIZE = (Integer.SIZE + Long.SIZE) / Byte.SIZE;
+
     public void sendStreamBytes(final VideoChunks.Chunk chunk){
-        try {
+        /*try {
             JSONObject obj = JSONMessageFactory.createStreamMessage(chunk);
             String text = obj.toString();
             totalBytesToSend.addAndGet(text.length());
@@ -186,6 +192,29 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient, Encoding
         }
         catch(JSONException e){
             Log.e(TAG, e.getMessage());
+        }
+        */
+        DataOutputStream dos = new DataOutputStream(baos);
+        byte[] payload = null;
+        try{
+            dos.writeInt(chunk.flags);
+            dos.writeLong(chunk.presentationTimestampUs);
+            dos.write(chunk.data);
+            payload = baos.toByteArray();
+
+            assert (payload.length == (STREAM_HEADER_SIZE + chunk.data.length));
+            totalBytesToSend.addAndGet(payload.length);
+            contToSend.incrementAndGet();
+            if (payload != null) mWebSocket.sendBinary(payload);
+        }
+        catch(IOException e){
+            Log.e(TAG, e.getMessage());
+            return;
+        }
+        finally {
+            baos.reset();
+            try { dos.close(); }
+            catch(IOException e){}
         }
     }
 
