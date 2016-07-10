@@ -12,17 +12,19 @@ import it.polito.mec.video.raven.sender.record.Size;
 public class Params {
 
     public static final Params[] PRESETS = new Params[]{
-            new Params(320, 240, 576, 25),      //240p
-            new Params(640, 480, 1216, 25),      //480p
-            new Params(640, 480, 1856, 25),      //480pHQ
+            new Params(320, 240, 576, 25),      //240p          LOW (bitrate < 1Mbps)
+            //new Params(640, 480, 1216, 25),      //480p
+            new Params(640, 480, 976, 25),      //480p
+            new Params(640, 480, 1856, 25),      //480pHQ       MEDIUM (1Mbps < bitrate < 2Mbps)
             //new Params(640, 480, 960, 25),      //480p
             //new Params(640, 480, 1216, 25),     //480pHQ
             //new Params(768, 576, 1408, 25),     //576p
             //new Params(768, 576, 1536, 25),     //576pHQ
-            new Params(768, 576, 1536, 25),     //576p
-            new Params(768, 576, 1856, 25),     //576pHQ
-            new Params(960, 720, 2432, 25),     //720p
-            new Params(960, 720, 3712, 25),     //720pHQ
+            new Params(768, 576, 1536, 25),     //576p          MEDIUM (1Mbps < bitrate < 2Mbps)
+            //new Params(768, 576, 1856, 25),     //576pHQ
+            new Params(768, 576, 2432, 25),     //576pHQ        MEDIUM (1Mbps < bitrate < 2Mbps)
+            new Params(960, 720, 2432, 25),     //720p          HIGH (2Mbps < bitrate < 4Mbps)
+            new Params(960, 720, 3712, 25),     //720pHQ        HIGH (2Mbps < bitrate < 4Mbps)
             //new Params(960, 720, 2432, 25),     //720pHQ
             //new Params(1440, 1080, 3712, 25),   //1080p
             //new Params(1440, 1080, 5632, 25),   //1080pHQ

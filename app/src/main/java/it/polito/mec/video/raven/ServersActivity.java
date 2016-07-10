@@ -2,6 +2,7 @@ package it.polito.mec.video.raven;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -240,12 +241,10 @@ public class ServersActivity extends AppCompatActivity {
         try{
             editor.putString(IPKey, obj.getString("address"));
             editor.putString(portKey, obj.getString("port"));
-            String name = obj.getString("name");
-            Toast.makeText(ServersActivity.this, "Chosen server: "+name, Toast.LENGTH_SHORT).show();
-            ServersActivity.this.finish();
         }
         catch(Exception e){}
         editor.commit();
+        finish();
     }
 
     private static void validateNewServerInput(String name, String address, String port)

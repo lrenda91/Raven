@@ -140,7 +140,18 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient {
 
     @Override
     public void onBinaryFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        byte[] payload = frame.getPayload();
+        /*byte[] payload = frame.getPayload();
+        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload));
+        int flag = dis.readInt();
+        long ts = dis.readLong();
+        int remaining = payload.length - STREAM_HEADER_SIZE;
+        byte[] data = new byte[remaining];
+        dis.read(data);
+        if (mListener != null) mListener.onStreamChunkReceived(data, flag, ts);*/
+    }
+
+    @Override
+    public void onBinaryMessage(WebSocket websocket, byte[] payload) throws Exception {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload));
         int flag = dis.readInt();
         long ts = dis.readLong();

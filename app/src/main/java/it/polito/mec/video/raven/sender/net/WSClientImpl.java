@@ -108,6 +108,7 @@ public class WSClientImpl extends WebSocketAdapter implements WSClient, Encoding
                     String mConnectURI = String.format(WS_URI_FORMAT, serverIP, port);
                     mWebSocket = new WebSocketFactory().createSocket(mConnectURI, timeout);
                     mWebSocket.addListener(WSClientImpl.this);
+                    mWebSocket.addHeader("rule","pub");
                     mWebSocket.connect();
                 }
                 catch(final Exception e){
